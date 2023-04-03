@@ -1,5 +1,6 @@
 import os
 import time
+
 import openai
 from dotenv import load_dotenv
 
@@ -25,12 +26,8 @@ def create_chat_message(role, content):
 
 
 def chat_with_ai(
-        prompt,
-        user_input,
-        full_message_history,
-        permanent_memory,
-        token_limit,
-        debug=False):
+    prompt, user_input, full_message_history, permanent_memory, token_limit, debug=False
+):
     while True:
         try:
             """
@@ -47,11 +44,14 @@ def chat_with_ai(
             str: The AI's response.
             """
             current_context = [
-                create_chat_message(
-                    "system", prompt), create_chat_message(
-                    "system", f"Permanent memory: {permanent_memory}")]
+                create_chat_message("system", prompt),
+                create_chat_message("system", f"Permanent memory: {permanent_memory}"),
+            ]
             current_context.extend(
-                full_message_history[-(token_limit - len(prompt) - len(permanent_memory) - 10):])
+                full_message_history[
+                    -(token_limit - len(prompt) - len(permanent_memory) - 10) :
+                ]
+            )
             current_context.extend([create_chat_message("user", user_input)])
 
             # Debug print the current context
@@ -61,8 +61,7 @@ def chat_with_ai(
                     # Skip printing the prompt
                     if message["role"] == "system" and message["content"] == prompt:
                         continue
-                    print(
-                        f"{message['role'].capitalize()}: {message['content']}")
+                    print(f"{message['role'].capitalize()}: {message['content']}")
                 print("----------- END OF CONTEXT ----------------")
 
             response = openai.ChatCompletion.create(
@@ -73,12 +72,10 @@ def chat_with_ai(
             assistant_reply = response.choices[0].message["content"]
 
             # Update full message history
+            full_message_history.append(create_chat_message("user", user_input))
             full_message_history.append(
-                create_chat_message(
-                    "user", user_input))
-            full_message_history.append(
-                create_chat_message(
-                    "assistant", assistant_reply))
+                create_chat_message("assistant", assistant_reply)
+            )
 
             return assistant_reply
         except openai.error.RateLimitError:

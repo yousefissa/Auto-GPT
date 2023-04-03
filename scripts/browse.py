@@ -1,8 +1,8 @@
-from googlesearch import search
+import openai
 import requests
 from bs4 import BeautifulSoup
+from googlesearch import search
 from readability import Document
-import openai
 
 
 def scrape_text(url):
@@ -20,15 +20,15 @@ def scrape_text(url):
     text = soup.get_text()
     lines = (line.strip() for line in text.splitlines())
     chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-    text = '\n'.join(chunk for chunk in chunks if chunk)
+    text = "\n".join(chunk for chunk in chunks if chunk)
 
     return text
 
 
 def extract_hyperlinks(soup):
     hyperlinks = []
-    for link in soup.find_all('a', href=True):
-        hyperlinks.append((link.text, link['href']))
+    for link in soup.find_all("a", href=True):
+        hyperlinks.append((link.text, link["href"]))
     return hyperlinks
 
 
@@ -88,15 +88,17 @@ def summarize_text(text, is_website=True):
             messages = [
                 {
                     "role": "user",
-                    "content": "Please summarize the following website text, do not describe the general website, but instead concisely extract the specific information this subpage contains.: " +
-                    chunk},
+                    "content": "Please summarize the following website text, do not describe the general website, but instead concisely extract the specific information this subpage contains.: "
+                    + chunk,
+                },
             ]
         else:
             messages = [
                 {
                     "role": "user",
-                    "content": "Please summarize the following text, focusing on extracting concise and specific information: " +
-                    chunk},
+                    "content": "Please summarize the following text, focusing on extracting concise and specific information: "
+                    + chunk,
+                },
             ]
 
         response = openai.ChatCompletion.create(
@@ -116,15 +118,17 @@ def summarize_text(text, is_website=True):
         messages = [
             {
                 "role": "user",
-                "content": "Please summarize the following website text, do not describe the general website, but instead concisely extract the specific information this subpage contains.: " +
-                combined_summary},
+                "content": "Please summarize the following website text, do not describe the general website, but instead concisely extract the specific information this subpage contains.: "
+                + combined_summary,
+            },
         ]
     else:
         messages = [
             {
                 "role": "user",
-                "content": "Please summarize the following text, focusing on extracting concise and specific infomation: " +
-                combined_summary},
+                "content": "Please summarize the following text, focusing on extracting concise and specific infomation: "
+                + combined_summary,
+            },
         ]
 
     response = openai.ChatCompletion.create(

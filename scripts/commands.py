@@ -1,13 +1,16 @@
-import browse
-import json
-import memory as mem
 import datetime
+import json
+
 import agent_manager as agents
+import ai_functions as ai
+import browse
+import memory as mem
 import speak
 from config import Config
-import ai_functions as ai
-from file_operations import read_file, write_to_file, append_to_file, delete_file
 from execute_code import execute_python_file
+from file_operations import (append_to_file, delete_file, read_file,
+                             write_to_file)
+
 cfg = Config()
 
 
@@ -43,9 +46,8 @@ def execute_command(command_name, arguments):
             return overwrite_memory(arguments["key"], arguments["string"])
         elif command_name == "start_agent":
             return start_agent(
-                arguments["name"],
-                arguments["task"],
-                arguments["prompt"])
+                arguments["name"], arguments["task"], arguments["prompt"]
+            )
         elif command_name == "message_agent":
             return message_agent(arguments["key"], arguments["message"])
         elif command_name == "list_agents":
@@ -55,9 +57,7 @@ def execute_command(command_name, arguments):
         elif command_name == "navigate_website":
             return navigate_website(arguments["action"], arguments["username"])
         elif command_name == "register_account":
-            return register_account(
-                arguments["username"],
-                arguments["website"])
+            return register_account(arguments["username"], arguments["website"])
         elif command_name == "get_text_summary":
             return get_text_summary(arguments["url"])
         elif command_name == "get_hyperlinks":
@@ -93,8 +93,9 @@ def execute_command(command_name, arguments):
 
 
 def get_datetime():
-    return "Current date and time: " + \
-        datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return "Current date and time: " + datetime.datetime.now().strftime(
+        "%Y-%m-%d %H:%M:%S"
+    )
 
 
 def google_search(query, num_results=8):
@@ -148,8 +149,7 @@ def delete_memory(key):
 
 def overwrite_memory(key, string):
     if key >= 0 and key < len(mem.permanent_memory):
-        _text = "Overwriting memory with key " + \
-            str(key) + " and string " + string
+        _text = "Overwriting memory with key " + str(key) + " and string " + string
         mem.permanent_memory[key] = string
         print(_text)
         return _text
@@ -215,8 +215,7 @@ def navigate_website(action, username):
 
 
 def register_account(username, website):
-    _text = "Registering account with username " + \
-        username + " and website " + website
+    _text = "Registering account with username " + username + " and website " + website
     print(_text)
     return "Command not implemented yet."
 

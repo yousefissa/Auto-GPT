@@ -10,7 +10,9 @@ def create_agent(task, prompt, model):
     global next_key
     global agents
 
-    messages = [{"role": "user", "content": prompt}, ]
+    messages = [
+        {"role": "user", "content": prompt},
+    ]
 
     # Start GTP3 instance
     response = openai.ChatCompletion.create(

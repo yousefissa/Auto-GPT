@@ -1,5 +1,6 @@
-import docker
 import os
+
+import docker
 
 
 def execute_python_file(file):
@@ -20,20 +21,19 @@ def execute_python_file(file):
         # You can find available Python images on Docker Hub:
         # https://hub.docker.com/_/python
         container = client.containers.run(
-            'python:3.8',
-            f'python {file}',
+            "python:3.8",
+            f"python {file}",
             volumes={
-                os.path.abspath(workspace_folder): {
-                    'bind': '/workspace',
-                    'mode': 'ro'}},
-            working_dir='/workspace',
+                os.path.abspath(workspace_folder): {"bind": "/workspace", "mode": "ro"}
+            },
+            working_dir="/workspace",
             stderr=True,
             stdout=True,
             detach=True,
         )
 
         output = container.wait()
-        logs = container.logs().decode('utf-8')
+        logs = container.logs().decode("utf-8")
         container.remove()
 
         return logs
