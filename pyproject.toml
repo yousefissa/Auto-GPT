@@ -1,0 +1,31 @@
+[metadata]
+name = "auto-gpt"
+version = "0.1.0"
+description = "Auto-GPT: An automated GPT-powered project"
+author = "Your Name"
+author_email = "your.email@example.com"
+license = "MIT"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line_length = 88
+target_version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.nox
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
