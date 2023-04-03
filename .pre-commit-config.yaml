@@ -1,0 +1,17 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 21.9b0  # Replace with the desired version of Black
+    hooks:
+      - id: black
+        language_version: python3.10  # Replace with your Python version
+
+  # Add more hooks as needed, such as flake8 for linting or isort for sorting imports
+  - repo: https://github.com/pycqa/flake8
+    rev: 3.9.2  # Replace with the desired version of flake8
+    hooks:
+      - id: flake8
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.9.3  # Replace with the desired version of isort
+    hooks:
+      - id: isort
