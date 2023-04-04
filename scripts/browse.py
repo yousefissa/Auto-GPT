@@ -1,8 +1,9 @@
-import openai
 import requests
 from bs4 import BeautifulSoup
-from googlesearch import search
-from readability import Document
+from config import Config
+from llm_utils import create_chat_completion
+
+cfg = Config()
 
 
 def scrape_text(url):
@@ -88,26 +89,29 @@ def summarize_text(text, is_website=True):
             messages = [
                 {
                     "role": "user",
-                    "content": "Please summarize the following website text, do not describe the general website, but instead concisely extract the specific information this subpage contains.: "
-                    + chunk,
+                    "content": (
+                        "Please summarize the following website text, do not describe"
+                        " the general website, but instead concisely extract the"
+                        " specific information this subpage contains.: " + chunk
+                    ),
                 },
             ]
         else:
             messages = [
                 {
                     "role": "user",
-                    "content": "Please summarize the following text, focusing on extracting concise and specific information: "
-                    + chunk,
+                    "content": (
+                        "Please summarize the following text, focusing on extracting"
+                        " concise and specific information: " + chunk
+                    ),
                 },
             ]
 
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+        summary = create_chat_completion(
+            model=cfg.fast_llm_model,
             messages=messages,
             max_tokens=300,
         )
-
-        summary = response.choices[0].message.content
         summaries.append(summary)
     print("Summarized " + str(len(chunks)) + " chunks.")
 
@@ -118,24 +122,28 @@ def summarize_text(text, is_website=True):
         messages = [
             {
                 "role": "user",
-                "content": "Please summarize the following website text, do not describe the general website, but instead concisely extract the specific information this subpage contains.: "
-                + combined_summary,
+                "content": (
+                    "Please summarize the following website text, do not describe the"
+                    " general website, but instead concisely extract the specific"
+                    " information this subpage contains.: " + combined_summary
+                ),
             },
         ]
     else:
         messages = [
             {
                 "role": "user",
-                "content": "Please summarize the following text, focusing on extracting concise and specific infomation: "
-                + combined_summary,
+                "content": (
+                    "Please summarize the following text, focusing on extracting"
+                    " concise and specific infomation: " + combined_summary
+                ),
             },
         ]
 
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+    final_summary = create_chat_completion(
+        model=cfg.fast_llm_model,
         messages=messages,
         max_tokens=300,
     )
 
-    final_summary = response.choices[0].message.content
     return final_summary
